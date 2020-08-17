@@ -1,9 +1,11 @@
+./check_sql.sh
+
 # overwrite initial html doc and table header into file 
 echo "<!DOCTYPE html>
 <html>
 	<body>
 		<table>
-			<tr><th>Year Released</th><th>Avg Gross</th></tr>
+			<tr><th>Year Released</th><th>Average Amount</th></tr>
 " > sa3.html
 
 # **working inwards -> outwards for SQL**
@@ -15,20 +17,17 @@ echo "<!DOCTYPE html>
 #
 # from that select the year_released and a cleaned version of the grossAvg 
 # grossAvg (round to nearest whole number with $ appended to front) 
-sqlite3 biopics.sqlite "
-SELECT year_release, printf(\"$%.0f\", grossAvg) 
+sqlite3 biopics.sqlite -html "
+SELECT year_release, printf(\"$%.0f\", grossAvg) as grossAvg
 from (
-	SELECT year_release, ROUND(AVG(gross)) as grossAvg
+	SELECT year_release, ROUND(AVG(gross) - 0.5) as grossAvg
 	from (
 		SELECT year_release, replace(gross, '$', '') as gross
 		FROM biopics 
 		WHERE gross != '-' 
 		GROUP BY title
 		) 
-	GROUP BY year_release);" |
-sed 's/|/<\/td><td>/g' | 
-sed 's/^/<tr><td>/g' | 
-sed 's/$/<\/td><\/tr>/g' >> sa3.html
+	GROUP BY year_release);" >> sa3.html
 
 # append end html closing tags
 echo "

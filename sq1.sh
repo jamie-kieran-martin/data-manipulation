@@ -1,9 +1,15 @@
+./check_sql.sh
+
 # select subject and counts 
-# grouped by trimmed subject 
+# grouped by trimmed case-insensitive subject 
 # (remove whitespace errors)
-sqlite3 biopics.sqlite '
-SELECT subject, COUNT(subject) 
+sqlite3 biopics.sqlite "
+SELECT TRIM(subject), COUNT(subject) 
 from biopics 
-GROUP BY TRIM(subject);' |
-# change | to , and write over file
-tr '|' ',' > sa1.txt
+GROUP BY UPPER(TRIM(subject));" |
+# change | to ,
+tr '|' ',' |
+# fix double quote ("") -> (') issues
+tr '\"' \' |
+# sort and send to txt
+sort > sa1.txt
