@@ -11,10 +11,10 @@ echo "<!DOCTYPE html>
 # **working inwards -> outwards for SQL**
 # create a cleaned selection of country, gross 
 # ignoring null gross values and grouping by title for uniqueness
-
+# 
 # from that create a selection of country, grossTotal
 # grouped by country
-
+# 
 # from that select the country and a cleaned version of the grossTotal 
 # grossTotal (round to nearest whole number with $ appended to front) 
 sqlite3 biopics.sqlite -html "

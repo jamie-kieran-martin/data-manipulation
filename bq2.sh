@@ -26,7 +26,7 @@ END {
 	for (i in a)
 		print i,a[i]
 }' | 
-# sort and write over file
+# sort into html tables and write over file
 sort |
 sed 's/ /<\/td><td>$/g' | 
 sed 's/^/<tr><td>/g' | 
